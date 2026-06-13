@@ -15,7 +15,7 @@
             <h1 class="site-title">Hanyi's Poetry Works</h1>
             <ul class="nav-links">
                 <li><a href="#home" class="active">Home</a></li>
-                <li><a href="poems/index.html">Poems</a></li>
+                <li><a href="#poems">Poems</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
         </nav>
@@ -26,15 +26,35 @@
             <div class="container">
                 <h2 class="hero-title">Poetry That Speaks to the Soul</h2>
                 <p class="hero-subtitle">Words woven with heart, rhythm, and the quiet beauty of everyday moments</p>
-                <a href="poems/index.html" class="cta-button">Browse All Poems</a>
             </div>
         </section>
 
-        <section class="featured-section">
+        <section id="poems" class="poems-section">
             <div class="container">
-                <h2 class="section-title">Featured Poems</h2>
-                <div class="poems-grid">
-                    <article class="poem-card">
+                <h2 class="section-title">All Poems</h2>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search poems..." class="search-input">
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="filter-section">
+                    <h3 class="filter-label">Filter by Theme:</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-theme="all">All</button>
+                        <button class="filter-btn" data-theme="memory-family">Memory & Family</button>
+                        <button class="filter-btn" data-theme="identity-displacement">Identity & Displacement</button>
+                        <button class="filter-btn" data-theme="nature">Nature & Environment</button>
+                        <button class="filter-btn" data-theme="everyday">Everyday Moments</button>
+                        <button class="filter-btn" data-theme="social">Social Commentary</button>
+                    </div>
+                </div>
+
+                <!-- All 18 Poems -->
+                <div class="poems-grid" id="poemsGrid">
+                    
+                    <article class="poem-card" data-themes="identity-displacement" data-date="2020" data-title="No One Knew the City Could Burn This Quietly">
                         <div class="poem-tags">
                             <span class="tag tag-identity-displacement">Identity & Displacement</span>
                         </div>
@@ -47,7 +67,47 @@
                         <a href="poems/no-one-knew-the-city-could-burn-this-qui.html" class="read-more">Read More →</a>
                     </article>
 
-                    <article class="poem-card">
+                    <article class="poem-card" data-themes="memory-family identity-displacement" data-date="2020" data-title="Our House Forgot Our Names">
+                        <div class="poem-tags">
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                            <span class="tag tag-identity-displacement">Identity & Displacement</span>
+                        </div>
+                        <h3 class="poem-title">Our House Forgot Our Names</h3>
+                        <p class="poem-meta">Sai Kung, Hong Kong</p>
+                        <p class="poem-excerpt">
+                            The wind slides through the torn mosquito screen.<br>
+                            The hallway smells like rust, yesterday's rain...
+                        </p>
+                        <a href="poems/our-house-forgot-our-names.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="everyday" data-date="2020" data-title="How to Be Loved">
+                        <div class="poem-tags">
+                            <span class="tag tag-everyday">Everyday Moments</span>
+                        </div>
+                        <h3 class="poem-title">How to Be Loved</h3>
+                        <p class="poem-excerpt">
+                            the newspaper boy once told me<br>
+                            love is loud. scream three times<br>
+                            each day, and someone will...
+                        </p>
+                        <a href="poems/how-to-be-loved.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="nature memory-family" data-date="2020" data-title="Astronomy Lesson">
+                        <div class="poem-tags">
+                            <span class="tag tag-nature">Nature & Environment</span>
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                        </div>
+                        <h3 class="poem-title">Astronomy Lesson</h3>
+                        <p class="poem-excerpt">
+                            By then, the stars will have turned back<br>
+                            into salt—dissolving, grain by grain...
+                        </p>
+                        <a href="poems/astronomy-lesson.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="memory-family" data-date="2020" data-title="Nǎinai">
                         <div class="poem-tags">
                             <span class="tag tag-memory-family">Memory & Family</span>
                         </div>
@@ -60,7 +120,7 @@
                         <a href="poems/nǎinai.html" class="read-more">Read More →</a>
                     </article>
 
-                    <article class="poem-card">
+                    <article class="poem-card" data-themes="nature identity-displacement" data-date="2020" data-title="The Great Migration">
                         <div class="poem-tags">
                             <span class="tag tag-nature">Nature & Environment</span>
                             <span class="tag tag-identity-displacement">Identity & Displacement</span>
@@ -75,7 +135,35 @@
                         <a href="poems/the-great-migration.html" class="read-more">Read More →</a>
                     </article>
 
-                    <article class="poem-card">
+                    <article class="poem-card" data-themes="nature identity-displacement" data-date="2020" data-title="Self-Portrait as a White Oak">
+                        <div class="poem-tags">
+                            <span class="tag tag-nature">Nature & Environment</span>
+                            <span class="tag tag-identity-displacement">Identity & Displacement</span>
+                        </div>
+                        <h3 class="poem-title">Self-Portrait as a White Oak</h3>
+                        <p class="poem-excerpt">
+                            The morning quiets—<br>
+                            the ground beneath me hums,<br>
+                            sugar-warm, stitched into a crown of moss...
+                        </p>
+                        <a href="poems/self-portrait-as-a-white-oak.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="memory-family identity-displacement" data-date="2020" data-title="The Cabbage Dissolves">
+                        <div class="poem-tags">
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                            <span class="tag tag-identity-displacement">Identity & Displacement</span>
+                        </div>
+                        <h3 class="poem-title">The Cabbage Dissolves</h3>
+                        <p class="poem-meta">Pudong, Shanghai</p>
+                        <p class="poem-excerpt">
+                            Tonight, I push open the sun-room window. The Pudong air<br>
+                            tastes metallic, like the clouds holding their breath...
+                        </p>
+                        <a href="poems/the-cabbage-dissolves.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="identity-displacement" data-date="2020" data-title="Sky Burial">
                         <div class="poem-tags">
                             <span class="tag tag-identity-displacement">Identity & Displacement</span>
                         </div>
@@ -87,10 +175,136 @@
                         </p>
                         <a href="poems/sky-burial.html" class="read-more">Read More →</a>
                     </article>
+
+                    <article class="poem-card" data-themes="everyday social" data-date="2020" data-title="to the delivery rider who called me three times from the gate">
+                        <div class="poem-tags">
+                            <span class="tag tag-everyday">Everyday Moments</span>
+                            <span class="tag tag-social">Social Commentary</span>
+                        </div>
+                        <h3 class="poem-title">to the delivery rider who called me three times from the gate</h3>
+                        <p class="poem-excerpt">
+                            by the third call i finally answered and you were already apologizing<br>
+                            唔好意思 唔好意思 the second syllable lifting...
+                        </p>
+                        <a href="poems/to-the-delivery-rider-who-called-me-thre.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="memory-family" data-date="2020" data-title="I Found a Ghost Today">
+                        <div class="poem-tags">
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                        </div>
+                        <h3 class="poem-title">I Found a Ghost Today</h3>
+                        <p class="poem-excerpt">
+                            pressed between the pages of grandma's<br>
+                            cookbook, its body thinned<br>
+                            to a crease in the paper...
+                        </p>
+                        <a href="poems/i-found-a-ghost-today.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="memory-family" data-date="2020" data-title="quiet storms & dried plums">
+                        <div class="poem-tags">
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                        </div>
+                        <h3 class="poem-title">quiet storms & dried plums</h3>
+                        <p class="poem-excerpt">
+                            nǎinai once said<br>
+                            the steam from pu-erh carries memory. I lift<br>
+                            the chipped cup, watch the fog curl...
+                        </p>
+                        <a href="poems/quiet-storms-dried-plums.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="everyday" data-date="2020" data-title="I Saw a Spider Then Finished the Other Eye">
+                        <div class="poem-tags">
+                            <span class="tag tag-everyday">Everyday Moments</span>
+                        </div>
+                        <h3 class="poem-title">I Saw a Spider Then Finished the Other Eye</h3>
+                        <p class="poem-excerpt">
+                            I was halfway through my eyeliner.<br>
+                            Below the mirror,<br>
+                            a spider...
+                        </p>
+                        <a href="poems/i-saw-a-spider-then-finished-the-other-e.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="memory-family everyday" data-date="2020" data-title="The World I Knew">
+                        <div class="poem-tags">
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                            <span class="tag tag-everyday">Everyday Moments</span>
+                        </div>
+                        <h3 class="poem-title">The World I Knew</h3>
+                        <p class="poem-excerpt">
+                            The slide still collects rain.<br>
+                            At the bottom, a shallow pool gathers<br>
+                            maple leaves, sun splintering into...
+                        </p>
+                        <a href="poems/the-world-i-knew.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="identity-displacement memory-family" data-date="2020" data-title="Field Elegy at the Edge of the World">
+                        <div class="poem-tags">
+                            <span class="tag tag-identity-displacement">Identity & Displacement</span>
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                        </div>
+                        <h3 class="poem-title">Field Elegy at the Edge of the World</h3>
+                        <p class="poem-excerpt">
+                            Wheat, sprouting from the suitcase laying<br>
+                            unopened, unpacked in my room. Wheat, coarse<br>
+                            and yellow, dirt-flecked...
+                        </p>
+                        <a href="poems/field-elegy-at-the-edge-of-the-world.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="social" data-date="2020" data-title="the sweetest honey in town">
+                        <div class="poem-tags">
+                            <span class="tag tag-social">Social Commentary</span>
+                        </div>
+                        <h3 class="poem-title">the sweetest honey in town</h3>
+                        <p class="poem-excerpt">
+                            honey!<br>
+                            organic!<br>
+                            fresh from the comb!...
+                        </p>
+                        <a href="poems/the-sweetest-honey-in-town.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="social identity-displacement" data-date="2020" data-title="Marikina River">
+                        <div class="poem-tags">
+                            <span class="tag tag-social">Social Commentary</span>
+                            <span class="tag tag-identity-displacement">Identity & Displacement</span>
+                        </div>
+                        <h3 class="poem-title">Marikina River</h3>
+                        <p class="poem-meta">Philippines</p>
+                        <p class="poem-excerpt">
+                            They say<br>
+                            the river rose like a throat clearing,<br>
+                            and did not stop...
+                        </p>
+                        <a href="poems/marikina-river.html" class="read-more">Read More →</a>
+                    </article>
+
+                    <article class="poem-card" data-themes="nature memory-family" data-date="2020" data-title="After the Rain">
+                        <div class="poem-tags">
+                            <span class="tag tag-nature">Nature & Environment</span>
+                            <span class="tag tag-memory-family">Memory & Family</span>
+                        </div>
+                        <h3 class="poem-title">After the Rain</h3>
+                        <p class="poem-excerpt">
+                            I return to the woods after the rain, the slope<br>
+                            slick with crushed beetles and the kind of quiet<br>
+                            the ferns keep after bending...
+                        </p>
+                        <a href="poems/after-the-rain.html" class="read-more">Read More →</a>
+                    </article>
+
                 </div>
-                <div style="text-align: center; margin-top: 3rem;">
-                    <a href="poems/index.html" class="cta-button">View All 18 Poems</a>
+
+                <!-- No Results Message -->
+                <div id="noResults" class="no-results" style="display: none;">
+                    <p>No poems found matching your search.</p>
                 </div>
+
             </div>
         </section>
 
@@ -116,10 +330,69 @@
     <footer>
         <div class="container">
             <p>&copy; 2026 Hanyi's Poetry Works. All rights reserved.</p>
-            <p class="footer-note">A showcase of poetry for the world to enjoy.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Filtering and Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const poemCards = document.querySelectorAll('.poem-card');
+        const noResults = document.getElementById('noResults');
+
+        let currentTheme = 'all';
+        let currentSearch = '';
+
+        function filterPoems() {
+            let visibleCount = 0;
+
+            poemCards.forEach(card => {
+                const themes = card.dataset.themes.split(' ');
+                const title = card.dataset.title.toLowerCase();
+                
+                const matchesTheme = currentTheme === 'all' || themes.includes(currentTheme);
+                const matchesSearch = currentSearch === '' || 
+                    title.includes(currentSearch) ||
+                    card.textContent.toLowerCase().includes(currentSearch);
+
+                if (matchesTheme && matchesSearch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide no results message
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Theme filter buttons
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTheme = btn.dataset.theme;
+                filterPoems();
+            });
+        });
+
+        // Search input
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            filterPoems();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
