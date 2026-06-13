@@ -7,7 +7,7 @@
 
     const canvas = document.createElement('canvas');
     canvas.id = 'rainCanvas';
-    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.4;';
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.6;';
     document.body.insertBefore(canvas, document.body.firstChild);
 
     const ctx = canvas.getContext('2d');
@@ -18,15 +18,15 @@
 
     // Configuration
     const CONFIG = {
-        maxDrops: 3,           // Max simultaneous falling drops
-        maxRipples: 8,         // Max simultaneous ripples
-        dropSpeed: 2.5,        // Drop fall speed (pixels per frame)
-        dropLength: 15,        // Length of raindrop streak
-        dropColor: 'rgba(150, 180, 210, 0.6)',
-        rippleMaxRadius: 40,   // Max ripple radius
-        rippleSpeed: 0.5,      // Ripple expansion speed
-        rippleColor: [150, 180, 210], // RGB for ripple
-        spawnInterval: 2500,   // ms between new drop spawns
+        maxDrops: 4,           // Max simultaneous falling drops
+        maxRipples: 10,        // Max simultaneous ripples
+        dropSpeed: 3,          // Drop fall speed (pixels per frame)
+        dropLength: 20,        // Length of raindrop streak
+        dropColor: 'rgba(120, 150, 190, 0.8)',
+        rippleMaxRadius: 50,   // Max ripple radius
+        rippleSpeed: 0.6,      // Ripple expansion speed
+        rippleColor: [120, 150, 190], // RGB for ripple
+        spawnInterval: 1500,   // ms between new drop spawns
     };
 
     function resize() {
