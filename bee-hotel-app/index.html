@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bee Hotel Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #fefbf5;
+            color: #303030;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #505030;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #707070;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: #f0f0f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #505050;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-title .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        
+        .gauge-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .gauge {
+            text-align: center;
+        }
+        
+        .gauge-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #50a050 0deg, #50a050 180deg, #e0e0e0 180deg, #e0e0e0 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto 12px;
+        }
+        
+        .gauge-circle::before {
+            content: '';
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #f0f0f0;
+        }
+        
+        .gauge-value {
+            position: relative;
+            z-index: 1;
+            font-size: 24px;
+            font-weight: 700;
+            color: #505030;
+        }
+        
+        .gauge-label {
+            font-size: 14px;
+            color: #707070;
+            margin-top: 8px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: #fefbf5;
+            padding: 16px;
+            border-radius: 12px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #707070;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #505030;
+        }
+        
+        .date-presets {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .preset-btn {
+            padding: 8px 16px;
+            border: 2px solid #d0d0d0;
+            background: #fefbf5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #505050;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .preset-btn:hover {
+            border-color: #50a050;
+            color: #50a050;
+        }
+        
+        .preset-btn.active {
+            background: #50a050;
+            border-color: #50a050;
+            color: white;
+        }
+        
+        .alert-item {
+            background: #fefbf5;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #f0b010;
+        }
+        
+        .alert-item.critical {
+            border-left-color: #e04040;
+        }
+        
+        .alert-item.info {
+            border-left-color: #4080e0;
+        }
+        
+        .alert-time {
+            font-size: 12px;
+            color: #707070;
+            margin-bottom: 4px;
+        }
+        
+        .alert-message {
+            font-size: 14px;
+            color: #505030;
+            font-weight: 500;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .data-table th {
+            background: #e0e0e0;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #505030;
+        }
+        
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table tr:hover {
+            background: #fefbf5;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .nav-item.active {
+            background: #d0f0d0;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        .nav-label {
+            font-size: 11px;
+            color: #707070;
+            font-weight: 500;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #50a050;
+            font-weight: 600;
+        }
+        
+        .fan-status {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .fan-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+        
+        .fan-icon.off {
+            animation: none;
+            opacity: 0.5;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .version {
+            text-align: center;
+            font-size: 11px;
+            color: #a0a0a0;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 600px) {
+            .gauge-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐝 Bee Hotel Monitor</h1>
+        <p>Environmental Monitoring Dashboard</p>
+    </div>
+
+    <!-- Status Tab -->
+    <div id="status" class="tab-content active">
+        <div class="card">
+            <div class="card-title">
+                <span>📊</span> Current Status
+            </div>
+            <div class="gauge-container">
+                <div class="gauge">
+                    <div class="gauge-circle">
+                        <div class="gauge-value" id="temp-gauge">26.5°C</div>
+                    </div>
+                    <div class="gauge-label">Indoor Temp</div>
+                </div>
+                <div class="gauge">
+                    <div class="gauge-circle">
+                        <div class="gauge-value" id="humidity-gauge">64%</div>
+                    </div>
+                    <div class="gauge-label">Indoor Humidity</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📈</span> Quick Stats
+            </div>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Outdoor Temp</div>
+                    <div class="stat-value" id="outdoor-temp">26.5°C</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Outdoor Humidity</div>
+                    <div class="stat-value" id="outdoor-humidity">64%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Records</div>
+                    <div class="stat-value" id="total-records">7,781</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Last Update</div>
+                    <div class="stat-value" id="last-update">Sep 5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Temperature Tab -->
+    <div id="temperature" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>🌡️</span> Temperature Trends
+            </div>
+            <div class="date-presets">
+                <button class="preset-btn" data-days="1">Today</button>
+                <button class="preset-btn" data-days="7">Last 7 Days</button>
+                <button class="preset-btn active" data-days="30">Last 30 Days</button>
+                <button class="preset-btn" data-days="90">Last 90 Days</button>
+                <button class="preset-btn" data-days="0">All Data</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="temp-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📊</span> Temperature Statistics
+            </div>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Avg Indoor</div>
+                    <div class="stat-value" id="avg-indoor-temp">26.5°C</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Avg Outdoor</div>
+                    <div class="stat-value" id="avg-outdoor-temp">26.5°C</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Max Indoor</div>
+                    <div class="stat-value" id="max-indoor-temp">26.9°C</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Min Indoor</div>
+                    <div class="stat-value" id="min-indoor-temp">26.0°C</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Humidity Tab -->
+    <div id="humidity" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>💧</span> Humidity Trends
+            </div>
+            <div class="date-presets">
+                <button class="preset-btn" data-days="1">Today</button>
+                <button class="preset-btn" data-days="7">Last 7 Days</button>
+                <button class="preset-btn active" data-days="30">Last 30 Days</button>
+                <button class="preset-btn" data-days="90">Last 90 Days</button>
+                <button class="preset-btn" data-days="0">All Data</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="humidity-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📊</span> Humidity Statistics
+            </div>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Avg Indoor</div>
+                    <div class="stat-value" id="avg-indoor-humidity">64%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Avg Outdoor</div>
+                    <div class="stat-value" id="avg-outdoor-humidity">64%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Max Indoor</div>
+                    <div class="stat-value" id="max-indoor-humidity">65%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Min Indoor</div>
+                    <div class="stat-value" id="min-indoor-humidity">63%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fan Tab -->
+    <div id="fan" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>🌀</span> Fan Status
+            </div>
+            <div class="fan-status">
+                <div class="fan-icon" id="fan-icon">🌀</div>
+                <div class="stat-value" id="fan-state">Running</div>
+                <p style="margin-top: 12px; color: #707070;">Automatic temperature control active</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📊</span> Fan Activity
+            </div>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Today's Runtime</div>
+                    <div class="stat-value">4.5 hrs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Activations</div>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Avg Temp Trigger</div>
+                    <div class="stat-value">28.5°C</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Efficiency</div>
+                    <div class="stat-value">92%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Tab -->
+    <div id="alerts" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>⚠️</span> Recent Alerts
+            </div>
+            <div id="alerts-list">
+                <div class="alert-item">
+                    <div class="alert-time">Sep 5, 2026 - 14:30</div>
+                    <div class="alert-message">High humidity detected: 78% (threshold: 75%)</div>
+                </div>
+                <div class="alert-item critical">
+                    <div class="alert-time">Sep 4, 2026 - 16:45</div>
+                    <div class="alert-message">Temperature spike: 32°C indoor (threshold: 30°C)</div>
+                </div>
+                <div class="alert-item info">
+                    <div class="alert-time">Sep 3, 2026 - 09:15</div>
+                    <div class="alert-message">Fan activated for cooling</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-time">Sep 2, 2026 - 11:20</div>
+                    <div class="alert-message">Sensor calibration completed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Tab -->
+    <div id="data" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>📋</span> Raw Data
+            </div>
+            <div class="date-presets">
+                <button class="preset-btn" data-days="1">Today</button>
+                <button class="preset-btn" data-days="7">Last 7 Days</button>
+                <button class="preset-btn active" data-days="30">Last 30 Days</button>
+                <button class="preset-btn" data-days="90">Last 90 Days</button>
+                <button class="preset-btn" data-days="0">All Data</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table" id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date/Time</th>
+                            <th>Indoor Temp</th>
+                            <th>Indoor Humidity</th>
+                            <th>Outdoor Temp</th>
+                            <th>Outdoor Humidity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="version">v2.0.0</div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" data-tab="status">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Status</div>
+        </div>
+        <div class="nav-item" data-tab="temperature">
+            <div class="nav-icon">🌡️</div>
+            <div class="nav-label">Temp</div>
+        </div>
+        <div class="nav-item" data-tab="humidity">
+            <div class="nav-icon">💧</div>
+            <div class="nav-label">Humidity</div>
+        </div>
+        <div class="nav-item" data-tab="fan">
+            <div class="nav-icon">🌀</div>
+            <div class="nav-label">Fan</div>
+        </div>
+        <div class="nav-item" data-tab="alerts">
+            <div class="nav-icon">⚠️</div>
+            <div class="nav-label">Alerts</div>
+        </div>
+        <div class="nav-item" data-tab="data">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label">Data</div>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let tempChart = null;
+        let humidityChart = null;
+        let currentDays = 30;
+
+        // Load data
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                allData = data.map(d => {
+                    let date;
+                    if (typeof d.date === 'number') {
+                        date = new Date(d.date);
+                    } else {
+                        const parts = d.date.split('/');
+                        date = new Date(parts[2], parts[1] - 1, parts[0]);
+                    }
+                    
+                    // Fix swapped columns for Unix timestamp records
+                    let indoorTemp = d['Indoor Temp (C)'];
+                    let outdoorHumidity = d['Outdoor Humidity (%)'];
+                    
+                    if (indoorTemp > 50 && outdoorHumidity < 40) {
+                        [indoorTemp, outdoorHumidity] = [outdoorHumidity, indoorTemp];
+                    }
+                    
+                    return {
+                        date: date,
+                        indoorTemp: indoorTemp,
+                        indoorHumidity: d['Indoor Humidity (%)'],
+                        outdoorTemp: d['Outdoor Temp (C)'],
+                        outdoorHumidity: outdoorHumidity
+                    };
+                }).sort((a, b) => a.date - b.date);
+                
+                updateDashboard();
+                initCharts();
+            });
+
+        // Tab navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                item.classList.add('active');
+                document.getElementById(item.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Date presets
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parent = btn.parentElement;
+                parent.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentDays = parseInt(btn.dataset.days);
+                updateCharts();
+                updateDataTable();
+            });
+        });
+
+        function getFilteredData() {
+            if (currentDays === 0) return allData;
+            
+            const maxDate = allData[allData.length - 1].date;
+            const startDate = new Date(maxDate);
+            startDate.setDate(startDate.getDate() - currentDays);
+            
+            return allData.filter(d => d.date >= startDate);
+        }
+
+        function updateDashboard() {
+            const latest = allData[allData.length - 1];
+            
+            document.getElementById('temp-gauge').textContent = latest.indoorTemp.toFixed(1) + '°C';
+            document.getElementById('humidity-gauge').textContent = latest.indoorHumidity + '%';
+            document.getElementById('outdoor-temp').textContent = latest.outdoorTemp.toFixed(1) + '°C';
+            document.getElementById('outdoor-humidity').textContent = latest.outdoorHumidity + '%';
+            document.getElementById('total-records').textContent = allData.length.toLocaleString();
+            document.getElementById('last-update').textContent = latest.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function initCharts() {
+            const tempCtx = document.getElementById('temp-chart').getContext('2d');
+            tempChart = new Chart(tempCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Indoor Temp',
+                            data: [],
+                            borderColor: '#50a050',
+                            backgroundColor: 'rgba(80, 160, 80, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Outdoor Temp',
+                            data: [],
+                            borderColor: '#f0b010',
+                            backgroundColor: 'rgba(240, 176, 16, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+
+            const humidityCtx = document.getElementById('humidity-chart').getContext('2d');
+            humidityChart = new Chart(humidityCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Indoor Humidity',
+                            data: [],
+                            borderColor: '#4080e0',
+                            backgroundColor: 'rgba(64, 128, 224, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Outdoor Humidity',
+                            data: [],
+                            borderColor: '#a040e0',
+                            backgroundColor: 'rgba(160, 64, 224, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+
+            updateCharts();
+            updateDataTable();
+        }
+
+        function updateCharts() {
+            const filtered = getFilteredData();
+            
+            const labels = filtered.map(d => d.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            
+            // Temperature chart
+            tempChart.data.labels = labels;
+            tempChart.data.datasets[0].data = filtered.map(d => d.indoorTemp);
+            tempChart.data.datasets[1].data = filtered.map(d => d.outdoorTemp);
+            tempChart.update();
+            
+            // Humidity chart
+            humidityChart.data.labels = labels;
+            humidityChart.data.datasets[0].data = filtered.map(d => d.indoorHumidity);
+            humidityChart.data.datasets[1].data = filtered.map(d => d.outdoorHumidity);
+            humidityChart.update();
+            
+            // Update stats
+            if (filtered.length > 0) {
+                const avgIndoorTemp = filtered.reduce((sum, d) => sum + d.indoorTemp, 0) / filtered.length;
+                const avgOutdoorTemp = filtered.reduce((sum, d) => sum + d.outdoorTemp, 0) / filtered.length;
+                const maxIndoorTemp = Math.max(...filtered.map(d => d.indoorTemp));
+                const minIndoorTemp = Math.min(...filtered.map(d => d.indoorTemp));
+                
+                document.getElementById('avg-indoor-temp').textContent = avgIndoorTemp.toFixed(1) + '°C';
+                document.getElementById('avg-outdoor-temp').textContent = avgOutdoorTemp.toFixed(1) + '°C';
+                document.getElementById('max-indoor-temp').textContent = maxIndoorTemp.toFixed(1) + '°C';
+                document.getElementById('min-indoor-temp').textContent = minIndoorTemp.toFixed(1) + '°C';
+                
+                const avgIndoorHumidity = filtered.reduce((sum, d) => sum + d.indoorHumidity, 0) / filtered.length;
+                const avgOutdoorHumidity = filtered.reduce((sum, d) => sum + d.outdoorHumidity, 0) / filtered.length;
+                const maxIndoorHumidity = Math.max(...filtered.map(d => d.indoorHumidity));
+                const minIndoorHumidity = Math.min(...filtered.map(d => d.indoorHumidity));
+                
+                document.getElementById('avg-indoor-humidity').textContent = avgIndoorHumidity.toFixed(0) + '%';
+                document.getElementById('avg-outdoor-humidity').textContent = avgOutdoorHumidity.toFixed(0) + '%';
+                document.getElementById('max-indoor-humidity').textContent = maxIndoorHumidity + '%';
+                document.getElementById('min-indoor-humidity').textContent = minIndoorHumidity + '%';
+            }
+        }
+
+        function updateDataTable() {
+            const filtered = getFilteredData();
+            const tbody = document.getElementById('data-table-body');
+            
+            tbody.innerHTML = filtered.slice(-50).reverse().map(d => `
+                <tr>
+                    <td>${d.date.toLocaleString()}</td>
+                    <td>${d.indoorTemp.toFixed(1)}°C</td>
+                    <td>${d.indoorHumidity}%</td>
+                    <td>${d.outdoorTemp.toFixed(1)}°C</td>
+                    <td>${d.outdoorHumidity}%</td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
